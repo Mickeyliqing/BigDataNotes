@@ -1,0 +1,10 @@
+vnote_backup_file_826537664 F:/学习文档/大数据/大数据学习笔记/MySQL/MySQL_乱码.md
+# MySQL_乱码
+
+## 解决步骤
+1. 保证Mysql正在启动。右键我的电脑——>管理——>服务和应用程序——>服务进行查看。
+2. Win+R,进入cmd命令界面——>cd/Program Files\MySQL\MySQL Server 5.6\bin 进入该文件夹，Program Files\MySQL\MySQL Server 5.6\bin文件目录是MySQL数据库的启动目录。
+3. mysql -h localhost -uroot -p 进入数据库登录。若有密码输入密码回车，没有初始密码，直接回车。
+4. 输入show variables like 'char%'; 查看。
+
+![MySQL_乱码](_v_images/20210901154827342_29602.png)

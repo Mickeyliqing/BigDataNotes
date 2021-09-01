@@ -1,0 +1,96 @@
+# MYSQL教程Vol_002
+学习知识最好的方式是什么？
+
+那就是用起来，只有用起来，知识才能是自己的。至于用的好不好，精不精，那不重要。
+
+原因很简单：时间跨度拉长，熟练程度自然而然就上去了。所以这不是问题。
+
+而学习技术最好的使用方式就是去解决问题。这里也就是上面说的“先用起来”。解决不同场景下的问题，技术能力慢慢就积累上去了。
+
+那。。。我们下面直接看问题。
+
+接下来我们将通过不同场景下的问题，一遍一遍去学习 Mysql 数据库的查询语句。至于中间出现的 ‘建表语句’, ‘插入语句’ 不是这里的重点，切记。
+
+## 问题_01：查找入职员工的入职时间排名倒数第三的员工所有信息。
+
+- 分析问题
+
+**原话**：查找职员工的入职时间排名倒数第三的员工所有信息。
+
+**分析后的语句**：查找员工信息，条件是入职时间排名倒数第三。
+
+- 查询语句
+
+```sql
+    --查找员工信息，根据入职时间 
+    select * from employees  where hire_date = 
+    
+    --排名倒数第三 
+    select (?) from employees ORDER BY hire_date desc limit 2,1
+    
+    --怎么把这两条语句关联起来？
+    --‘？’ 应该是什么字段？
+    --根据第一条语句的条件‘入职时间’来判断，‘？’这个字段应该也是入职时间。
+    --完整的语句
+    select * from employees where hire_date = (select DISTINCT hire_date from employees ORDER BY hire_date DESC LIMIT 2,1);
+```
+
+**解释说明**
+
+1. 通过分析问题的思路可以知道，这是一个典型的套用‘子查询’处理的方式。所谓的‘子查询’的意思就是：先把复杂的问题给分解成一个一个小的问题，先把小的问题给解决了，然后在找各个小问题之前的联系，思路就是上面的分析过程。
+2. DISTINCT 这个关键字是‘去除重复的数据’。例如你查出来的字段有两条，数值都是 1，那么加上这个关键字后就只显示一条。
+3. ORDER BY hire_date DESC  是根据对应的字段 hire_date 降序排序。同理 ORDER BY hire_date ASC
+4. LIMIT 这个关键字是限制显示条数。LIMIT 2,1 的意思是从第二条开始，查询一条数据。这里需要注意的是开始字段是从零开始的。即 0,1,2,3。
+
+对于以上关键字的使用，记住通用的使用规则就可以了。
+
+## 问题_02：查找所有已经分配部门的员工的 last_name 和 first_name。
+
+- 分析问题
+
+**原话**：查找所有已经分配部门的员工的 last_name 和 first_name 。
+
+**分析后的语句**：查找员工的last_name 和 first_name，条件是已经分配了部门的员工。（那就应该有未分配部门的员工）
+
+- 查询语句
+
+```sql
+    --查找员工的last_name 和 first_name
+    select e.first_name,e.last_name, d.dept_no from employees e
+    
+    --已经分配了部门的员工（那就应该有未分配部门的员工）
+    select d.dept_no from dept_emp d where d.dept_no is not null;
+    
+    --如何把这两张表给关联起来？
+    --寻找这两张表的关系。
+    --可以通过建表语句，寻找表结构信息。
+    --发现在这两张表中存在 `e.emp_no = d.emp_no` 这样的一种关联
+    --完整的语句：
+    select e.first_name,e.last_name, d.dept_no from employees e LEFT JOIN dept_emp d ON e.emp_no = d.emp_no where d.dept_no is not null;
+```
+
+**解释说明**
+
+1. LEFT JOIN ON 是表与表关联的语句。可以理解成把 employees 和 dept_emp 这两张表给关联起来，而关联的条件就是 e.emp_no = d.emp_no 。并且查询出来的结果包含左表 employees  的所有信息。（本来两个表关系查询，那么最后查出来的数据应该是两个表中都共有的，但采用 LEFT JOIN ON 关联后，如果左表 employees 中有部分数据是右表 dept_emp 没有的，那么也会显示出来。）同理 RIGHT JOIN ON 是以右边的表为准的；INNER JOIN ON 只能查出来两张表共有的数据。
+
+## 问题_03:查找所有员工当前的薪水 salary 情况，对于相同的薪水只显示一次,并按照逆序显示。
+
+- 分析问题
+
+**原话**：查找所有员工当前的薪水 salary 情况，对于相同的薪水只显示一次,并按照逆序显示 。
+
+**分析后的语句**：查找员工的薪水 salary ，条件是相同的薪水只显示一次，并按照逆序显示。
+
+```sql
+    --查找员工的薪水 salary 
+    select a.salary from salaries a
+    
+    --相同的薪水只显示一次？
+    --这个思路有两个点，一个点是上面之前提到的 `DISTINCT` 这个关键字。
+    --另外一个就是 采用 `GROUP BY` 分组，把相同的薪水分到同一个组内。
+    --按照逆序显示。这个之前上文已经提到了，使用 `ORDER BY DESC`。
+    --完整的语句：
+    select a.salary from salaries a where a.to_date ='' GROUP BY a.salary ORDER BY a.salary DESC; 
+```
+
+
