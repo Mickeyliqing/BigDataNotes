@@ -4,7 +4,7 @@
 * `Reducing`：遍历集合中的元素来返回一个综合的结果。
 * 计算框架
 
-![计算框架](_v_images/20201006092421468_32521.png)
+![计算框架](F:\学习文档\大数据\大数据学习笔记\BigDataNotes\Hadoop\_v_images\20201006092421468_32521.png)
 
 * 计算模型
 
@@ -104,30 +104,10 @@
 由我们自己编写，最终结果存储在hdfs上的,一个`Reduce`对应一个输出文件。
 
 * 整个过程
-![01](_v_images/20201006101106334_25594.png)
+  ![01](F:\学习文档\大数据\大数据学习笔记\BigDataNotes\Hadoop\_v_images\20201006101106334_25594.png)
 
 * Spill 过程
 
-![02](_v_images/20201006101215231_10886.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![02](F:\学习文档\大数据\大数据学习笔记\BigDataNotes\Hadoop\_v_images\20201006101215231_10886.png)
 
 > 参考内容：[Hadoop--MapReduce详解](https://blog.xiaoxiaomo.com/2016/07/03/Hadoop-MapReduce详解/)

@@ -70,9 +70,7 @@ public class Spark_Hive_Demo {
 
 
 
-
-
-
+- Spark 外置 Hive
 
 1. 把 Hive/conf 下的 hive-site.xml。
 2. 如果hive的metestore使用的是mysql数据库，那么需要将mysql的jdbc驱动包放到spark的jars目录下。
